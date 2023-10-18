@@ -2,5 +2,5 @@ collections:
   - community.general
 
 roles:
-  - name: package-downloader
+  - name: role-package-downloader
     src: https://github.com/kubealex/role-package-downloader

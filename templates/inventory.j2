@@ -60,7 +60,7 @@ hub_pg_password={{ pgsql_password | default('redhat', true) }}
 # AAP EDA Controller - mandatory
 # ------------------------------
 eda_admin_password={{ aap2_password | default('redhat', true) }}
-eda_pg_host={{ hostvars[inventory_hostname].ansible_fqdn
+eda_pg_host={{ hostvars[inventory_hostname].ansible_fqdn }}
 eda_pg_password={{ pgsql_password | default('redhat', true) }}
 controller_main_url=https://{{ hostvars[inventory_hostname].ansible_fqdn }}
 
