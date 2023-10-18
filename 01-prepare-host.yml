@@ -1,0 +1,57 @@
+---
+- name: AAP2 Containerized Setup | Prepare RHEL host
+  hosts: aap2_host
+  vars_files:
+    - aap2_setup_vars.yml
+  pre_tasks:
+    - name: AAP2 Containerized Setup | Set home directory as fact
+      ansible.builtin.set_fact:
+        user_home: "{{ lookup('env','HOME') }}"
+
+    - name: AAP2 Containerized Setup | Register host with Subscription Manager
+      community.general.redhat_subscription:
+        state: present
+        username: "{{ rhsm_user }}"
+        password: "{{ rhsm_password }}"
+      become: true
+
+    - name: AAP2 Containerized Setup |
+      ansible.builtin.dnf:
+        name:
+          - ansible-core
+          - wget
+          - git
+          - rsync
+        state: latest # noqa package-latest
+      become: true
+
+  roles:
+    - role: role-package-downloader
+      vars:
+        rh_api_offline_token: "{{ rh_api_token }}"
+        rh_product_name: aap2_containerized
+        rh_product_path: "{{ user_home }}"
+
+  post_tasks:
+    - name: AAP2 Containerized Setup | Extract installer to "{{ user_home }}"
+      ansible.builtin.unarchive:
+        src: "{{ rh_package_path }}"
+        dest: "{{ user_home }}"
+        list_files: true
+      register: _unarchive_output
+
+    - name: AAP2 Containerized Setup | Set installer dir as fact
+      ansible.builtin.set_fact:
+        aap2_installer_dir: "{{ _unarchive_output.files[0] }}"
+
+    - name: AAP2 Containerized Setup | Populate inventory for AAP2 Install
+      ansible.builtin.template:
+        src: inventory.j2
+        dest: "{{ aap2_installer_dir }}/inventory"
+
+    - name: AAP2 Containerized Setup | Run setup playbook
+      ansible.builtin.shell:
+        cmd: ansible-playbook -i inventory ansible.containerized_installer.install
+        chdir: "{{ aap2_installer_dir }}"
+      environment:
+        ANSIBLE_COLLECTIONS_PATH: "{{ aap2_installer_dir }}/collections"
