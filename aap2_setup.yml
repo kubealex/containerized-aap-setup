@@ -1,8 +1,6 @@
 ---
 - name: AAP2 Containerized Setup | Prepare RHEL host
   hosts: aap2_host
-  vars_files:
-    - vars_aap2_setup.yml
   pre_tasks:
     - name: AAP2 Containerized Setup | Set home directory as fact
       ansible.builtin.set_fact:

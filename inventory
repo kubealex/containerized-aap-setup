@@ -1,1 +1,1 @@
-aap2_host ansible_host= ansible_user= ansible_password= ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+aap2_host ansible_host=YOUR_HOST_HERE ansible_user=YOUR_REMOTE_USERNAME_HERE ansible_password=YOUR_REMOTE_USER_PWD_HERE ansible_ssh_common_args='-o StrictHostKeyChecking=no'
