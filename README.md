@@ -21,6 +21,14 @@ Recommended requirements for a smooth installation are:
 
 The remote user must have sudo privileges.
 
+### Ansible requirements
+
+To install required collections and roles:
+
+```bash
+ansible-galaxy install -r collections/requirements.yml -f
+```
+
 ### Playbook Variables
 
 I made available the [vars_aap2_setup.yml file](./vars_aap2_setup.yml) to collect the required variables. It can be adapted to a vault file to store the information.
