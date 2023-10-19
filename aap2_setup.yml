@@ -6,7 +6,6 @@
   pre_tasks:
     - name: AAP2 Containerized Setup | Set home directory as fact
       ansible.builtin.set_fact:
-        # user_home: "{{ lookup('env','HOME') }}"
         user_home: "~"
 
     - name: AAP2 Containerized Setup | Register host with Subscription Manager
@@ -50,10 +49,20 @@
       ansible.builtin.template:
         src: inventory.j2
         dest: "{{ user_home }}/{{ aap2_installer_dir }}/inventory"
+        mode: "0755"
 
-    - name: AAP2 Containerized Setup | Run setup playbook
+    - name: AAP2 Containerized Setup | Run setup playbook # noqa command-instead-of-shell no-changed-when
       ansible.builtin.shell:
         cmd: ansible-playbook -i inventory ansible.containerized_installer.install
         chdir: "{{ aap2_installer_dir }}"
       environment:
         ANSIBLE_COLLECTIONS_PATH: "{{ user_home }}/{{ aap2_installer_dir }}/collections"
+
+    - name: AAP2 Containerized Setup | Print environment info
+      ansible.builtin.debug:
+        msg:
+          - Ansible Automation Platform 2 has been successfully installed
+          - All your instances are accessible using "admin" as username with password {{ aap2_password | default('redhat', true) }}
+          - Automation Controller URL - https://{{ hostvars[inventory_hostname].ansible_fqdn }}:443
+          - Automation Hub URL - https://{{ hostvars[inventory_hostname].ansible_fqdn }}:444
+          - EDA Controller URL - https://{{ hostvars[inventory_hostname].ansible_fqdn }}:445
