@@ -5,17 +5,17 @@
 # This section is for your AAP Controller host(s)
 # -------------------------------------------------
 [automationcontroller]
-{{ hostvars[inventory_hostname].ansible_fqdn }} ansible_connection=local
+{{ host_address }} ansible_connection=local
 
 # This section is for your AAP Automation Hub host(s)
 # -----------------------------------------------------
 [automationhub]
-{{ hostvars[inventory_hostname].ansible_fqdn }} ansible_connection=local
+{{ host_address }} ansible_connection=local
 
 # This section is for your AAP EDA Controller host(s)
 # -----------------------------------------------------
 [automationeda]
-{{ hostvars[inventory_hostname].ansible_fqdn }} ansible_connection=local
+{{ host_address }} ansible_connection=local
 
 # This section is for the AAP database(s)
 # -----------------------------------------
@@ -23,7 +23,7 @@
 # Leave commented out if you intend to use your own external database and just set appropriate _pg_hosts vars
 # see mandatory sections under each AAP component
 [database]
-{{ hostvars[inventory_hostname].ansible_fqdn }} ansible_connection=local
+{{ host_address }} ansible_connection=local
 
 [all:vars]
 
@@ -38,7 +38,7 @@ registry_password={{ rhsm_password }}
 # AAP Controller - mandatory
 # --------------------------
 controller_admin_password={{ aap2_password | default('redhat', true) }}
-controller_pg_host={{ hostvars[inventory_hostname].ansible_fqdn }}
+controller_pg_host={{ host_address }}
 controller_pg_password={{ pgsql_password | default('redhat', true) }}
 
 # AAP Controller - optional
@@ -51,7 +51,7 @@ controller_pg_password={{ pgsql_password | default('redhat', true) }}
 # AAP Automation Hub - mandatory
 # ------------------------------
 hub_admin_password={{ aap2_password | default('redhat', true) }}
-hub_pg_host={{ hostvars[inventory_hostname].ansible_fqdn }}
+hub_pg_host={{ host_address }}
 hub_pg_password={{ pgsql_password | default('redhat', true) }}
 
 # AAP Automation Hub - optional
@@ -60,9 +60,9 @@ hub_pg_password={{ pgsql_password | default('redhat', true) }}
 # AAP EDA Controller - mandatory
 # ------------------------------
 eda_admin_password={{ aap2_password | default('redhat', true) }}
-eda_pg_host={{ hostvars[inventory_hostname].ansible_fqdn }}
+eda_pg_host={{ host_address }}
 eda_pg_password={{ pgsql_password | default('redhat', true) }}
-controller_main_url=https://{{ hostvars[inventory_hostname].ansible_fqdn }}
+controller_main_url=https://{{ host_address }}
 
 # AAP EDA Controller - optional
 # -----------------------------

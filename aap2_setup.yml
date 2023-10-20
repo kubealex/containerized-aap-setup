@@ -4,7 +4,8 @@
   pre_tasks:
     - name: AAP2 Containerized Setup | Set home directory as fact
       ansible.builtin.set_fact:
-        user_home: "~"
+        working_dir: "{{ aap2_setup_dir | default('~', true) }}"
+        host_address: "{{ hostvars[inventory_hostname].ansible_host }}"
 
     - name: AAP2 Containerized Setup | Register host with Subscription Manager
       community.general.redhat_subscription:
@@ -28,13 +29,13 @@
       vars:
         rh_api_offline_token: "{{ rh_api_token }}"
         rh_product_name: aap2_containerized
-        rh_product_path: "{{ user_home }}"
+        rh_product_path: "{{ working_dir }}"
 
   post_tasks:
-    - name: AAP2 Containerized Setup | Extract installer to "{{ user_home }}"
+    - name: AAP2 Containerized Setup | Extract installer to "{{ working_dir }}"
       ansible.builtin.unarchive:
         src: "{{ rh_package_path }}"
-        dest: "{{ user_home }}"
+        dest: "{{ working_dir }}"
         remote_src: true
         list_files: true
       register: _unarchive_output
@@ -46,7 +47,7 @@
     - name: AAP2 Containerized Setup | Populate inventory for AAP2 Install
       ansible.builtin.template:
         src: inventory.j2
-        dest: "{{ user_home }}/{{ aap2_installer_dir }}/inventory"
+        dest: "{{ working_dir }}/{{ aap2_installer_dir }}/inventory"
         mode: "0755"
 
     - name: AAP2 Containerized Setup | Run setup playbook # noqa command-instead-of-shell no-changed-when
@@ -54,13 +55,13 @@
         cmd: ansible-playbook -i inventory ansible.containerized_installer.install
         chdir: "{{ aap2_installer_dir }}"
       environment:
-        ANSIBLE_COLLECTIONS_PATH: "{{ user_home }}/{{ aap2_installer_dir }}/collections"
+        ANSIBLE_COLLECTIONS_PATH: "{{ working_dir }}/{{ aap2_installer_dir }}/collections"
 
     - name: AAP2 Containerized Setup | Print environment info
       ansible.builtin.debug:
         msg:
           - Ansible Automation Platform 2 has been successfully installed
           - All your instances are accessible using "admin" as username with password {{ aap2_password | default('redhat', true) }}
-          - Automation Controller URL - https://{{ hostvars[inventory_hostname].ansible_fqdn }}:443
-          - Automation Hub URL - https://{{ hostvars[inventory_hostname].ansible_fqdn }}:444
-          - EDA Controller URL - https://{{ hostvars[inventory_hostname].ansible_fqdn }}:445
+          - Automation Controller URL - https://{{ host_address }}:443
+          - Automation Hub URL - https://{{ host_address }}:444
+          - EDA Controller URL - https://{{ host_address }}:445
