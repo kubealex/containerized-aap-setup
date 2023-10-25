@@ -2,9 +2,9 @@
 
 With the Technology preview of [containerized setup of AAP2](https://www.ansible.com/blog/announcing-containerized-ansible-automation-platform) you have a new way of deploying the components of the automation platform in a fast way using containers.
 
-I created this repo to help you getting started with a minimal setup and no customizations and start working on it in minutes!
+I created this repo to help you get started with a minimal setup and no customizations and start working on it in minutes!
 
-**This playbook is not endorsed or supported by Red Hat and it is not an official way to setup the product!**
+**This playbook is not endorsed or supported by Red Hat and it is not an official way to set up the product!**
 
 ## Requirements
 
@@ -49,7 +49,7 @@ I already prepared a one-liner for the inventory, you can adjust it to match you
 aap2_host ansible_host=YOUR_HOST_HERE ansible_user=YOUR_REMOTE_USERNAME_HERE ansible_password=YOUR_REMOTE_USER_PWD_HERE ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 ```
 
-**ansible_host variable will be used to setup the hostname/IP address wher Ansible Automation Platform will be reachable, ensure it matches the FQDN or the IP**
+**ansible_host variable will be used to set the hostname/IP address where Ansible Automation Platform will be reachable, ensure it matches the FQDN or the IP**
 
 That's all you need to launch the playbook, edit it accordingly if you use SSH keys to connect.
 
